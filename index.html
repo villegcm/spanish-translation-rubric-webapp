@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Translation Rubric</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #d1d5db;
+            border-radius: 9999px;
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .slider-container {
+            position: relative;
+            width: 100%;
+        }
+        .slider-container .tick-marks {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .slider-container .tick-marks span {
+            width: 2px;
+            height: 12px;
+            background-color: #9ca3af;
+            transform: translateY(-50%);
+            margin-top: 4px;
+        }
+        .slider-labels {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+        .slider-labels > div {
+            flex: 1;
+            text-align: center;
+        }
+        .slider-labels > div:first-child {
+            text-align: left;
+        }
+        .slider-labels > div:last-child {
+            text-align: right;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Spanish Translation Prioritization Rubric</h1>
+        <p class="text-center text-gray-600 mb-8">Evaluate a story's potential for translation to effectively serve Spanish-speaking & Latino communities.</p>
+
+        <div class="p-6 bg-gray-50 rounded-lg border border-gray-200 mb-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">How to Use This Form</h2>
+            <p class="text-gray-600 mb-4">This rubric is designed to help you objectively evaluate a news story's suitability for translation. By scoring each article, you can ensure we are prioritizing content that is most relevant, timely, and impactful for our Spanish-speaking audience.</p>
+            <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                <li>Read each question carefully, as well as the section's overall definition.</li>
+                <li>Use the horizontal slider for each question to select a score from 1 to 5. The descriptive words below the slider correspond to scores 1, 3, and 5 to guide your selection.</li>
+                <li>After scoring all questions, click the "Evaluate Priority" button.</li>
+                <li>The form will automatically calculate the total score and determine the article's translation priority.</li>
+            </ol>
+        </div>
+
+        <form id="rubricForm" class="space-y-6">
+            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Relevance & Impact <span class="text-sm font-normal text-gray-500">(Total Possible: 20)</span></h2>
+                <p class="text-gray-600 mb-4">"Relevance & Impact" evaluates whether a story is essential for the daily lives and civic participation of the Latino community. A story with high relevance provides crucial information that helps community members make informed decisions, access resources, or understand events that directly affect them.</p>
+                <div class="space-y-6">
+                    <div class="border-b pb-4">
+                        <label for="relevance1" class="block text-gray-700 font-medium mb-2">How much does the story directly feature sources, events, or data points from the Latino community?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="relevance1" name="relevance1" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">A little bit</span>
+                                    <span class="w-1/3 text-center">A fair amount</span>
+                                    <span class="w-1/3 text-right">All of it</span>
+                                </div>
+                            </div>
+                            <span id="relevance1Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                    <div class="border-b pb-4">
+                        <label for="relevance2" class="block text-gray-700 font-medium mb-2">How much does the story address a known information need or topic of high interest to the Latino community?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="relevance2" name="relevance2" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">Barely</span>
+                                    <span class="w-1/3 text-center">A fair amount</span>
+                                    <span class="w-1/3 text-right">Directly</span>
+                                </div>
+                            </div>
+                            <span id="relevance2Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                    <div class="border-b pb-4">
+                        <label for="relevance3" class="block text-gray-700 font-medium mb-2">How much does the story provide critical information that may help a general community member navigate their daily life?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="relevance3" name="relevance3" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">A little bit</span>
+                                    <span class="w-1/3 text-center">A fair amount</span>
+                                    <span class="w-1/3 text-right">All of it</span>
+                                </div>
+                            </div>
+                            <span id="relevance3Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="relevance4" class="block text-gray-700 font-medium mb-2">How much does the story encourage community participation, such as attending an event or utilizing a service?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="relevance4" name="relevance4" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">Barely</span>
+                                    <span class="w-1/3 text-center">A fair amount</span>
+                                    <span class="w-1/3 text-right">Directly</span>
+                                </div>
+                            </div>
+                            <span id="relevance4Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Timeliness <span class="text-sm font-normal text-gray-500">(Total Possible: 10)</span></h2>
+                <p class="text-gray-600 mb-4">"Timeliness" prioritizes content based on its recency and urgency. Breaking news, alerts, and time-sensitive announcements are given a higher priority for immediate translation to ensure the community has access to critical information when it matters most.</p>
+                <div class="space-y-6">
+                    <div class="border-b pb-4">
+                        <label for="timeliness1" class="block text-gray-700 font-medium mb-2">Is the story share time-sensitive or critical information?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="timeliness1" name="timeliness1" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">Slightly</span>
+                                    <span class="w-1/3 text-center">Substantial</span>
+                                    <span class="w-1/3 text-right">Extremely</span>
+                                </div>
+                            </div>
+                            <span id="timeliness1Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="timeliness2" class="block text-gray-700 font-medium mb-2">Is the article's information evergreen content?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="timeliness2" name="timeliness2" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">Slightly</span>
+                                    <span class="w-1/3 text-center">Substantial</span>
+                                    <span class="w-1/3 text-right">Extremely</span>
+                                </div>
+                            </div>
+                            <span id="timeliness2Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Cultural Resonance <span class="text-sm font-normal text-gray-500">(Total Possible: 15)</span></h2>
+                <p class="text-gray-600 mb-4">"Cultural Resonance" is when the article reflects and respects cultural values, including authentic community voices, or highlighting positive stories and assets, trust is built and visibility occurs.</p>
+                <div class="space-y-6">
+                    <div class="border-b pb-4">
+                        <label for="resonance1" class="block text-gray-700 font-medium mb-2">Does the story hold power accountable on an issue that disproportionately affects the Latino community?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="resonance1" name="resonance1" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">Barely</span>
+                                    <span class="w-1/3 text-center">A fair amount</span>
+                                    <span class="w-1/3 text-right">Completely</span>
+                                </div>
+                            </div>
+                            <span id="resonance1Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                    <div class="border-b pb-4">
+                        <label for="resonance2" class="block text-gray-700 font-medium mb-2">Is the story compelling and unique, adding a perspective not already covered by other media?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="resonance2" name="resonance2" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">Barely</span>
+                                    <span class="w-1/3 text-center">A fair amount</span>
+                                    <span class="w-1/3 text-right">Absolutely</span>
+                                </div>
+                            </div>
+                            <span id="resonance2Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="resonance3" class="block text-gray-700 font-medium mb-2">Could this story be amplified by Spanish-first/bilingual-centered news/media outlets?</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="range" id="resonance3" name="resonance3" min="1" max="5" step="1" value="1" class="w-full">
+                                <div class="absolute top-0 -mt-2 w-full flex justify-between pointer-events-none">
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                    <span class="w-1 h-4 bg-gray-400"></span>
+                                </div>
+                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
+                                    <span class="w-1/3 text-left">Barely</span>
+                                    <span class="w-1/3 text-center">A fair amount</span>
+                                    <span class="w-1/3 text-right">Absolutely</span>
+                                </div>
+                            </div>
+                            <span id="resonance3Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition duration-300">Evaluate Priority</button>
+        </form>
+
+        <div id="results" class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 text-center hidden">
+            <h2 class="text-xl font-bold mb-4">Evaluation Result</h2>
+            <div class="flex flex-col items-center">
+                <div id="resultImage" class="text-6xl mb-4"></div>
+                <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                    <p class="text-2xl font-bold text-gray-800">Total Score: <span id="totalScore" class="text-blue-600"></span></p>
+                    <p class="text-2xl font-bold text-gray-800">Priority: <span id="priority" class="text-blue-600"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('rubricForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const relevance1 = parseInt(form.relevance1.value);
+            const relevance2 = parseInt(form.relevance2.value);
+            const relevance3 = parseInt(form.relevance3.value);
+            const relevance4 = parseInt(form.relevance4.value);
+            const timeliness1 = parseInt(form.timeliness1.value);
+            const timeliness2 = parseInt(form.timeliness2.value);
+            const resonance1 = parseInt(form.resonance1.value);
+            const resonance2 = parseInt(form.resonance2.value);
+            const resonance3 = parseInt(form.resonance3.value);
+            
+            const totalScore = relevance1 + relevance2 + relevance3 + relevance4 + timeliness1 + timeliness2 + resonance1 + resonance2 + resonance3;
+            
+            let priorityText = "";
+            let priorityImage = "";
+
+            if (totalScore >= 30 || timeliness1 === 5) {
+                priorityText = "High Priority";
+                priorityImage = "🚀";
+            } else if (totalScore >= 22) {
+                priorityText = "Standard Priority";
+                priorityImage = "⚙️";
+            } else {
+                priorityText = "Low Priority";
+                priorityImage = "📉";
+            }
+
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('priority').textContent = priorityText;
+            document.getElementById('resultImage').textContent = priorityImage;
+            document.getElementById('results').classList.remove('hidden');
+        });
+
+        const sliders = document.querySelectorAll('input[type="range"]');
+        sliders.forEach(slider => {
+            const valueSpan = document.getElementById(slider.id + 'Value');
+            const descriptorWords = slider.parentElement.querySelector('.slider-labels').children;
+            slider.addEventListener('input', () => {
+                valueSpan.textContent = slider.value;
+            });
+        });
+    </script>
+</body>
+</html>
