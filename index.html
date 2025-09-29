@@ -9,75 +9,26 @@
         body {
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            background: #d1d5db;
-            border-radius: 9999px;
-            outline: none;
-            padding: 0;
-            margin: 0;
+        .hidden-section {
+            display: none;
         }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            background: #3b82f6;
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        input[type=range]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: #3b82f6;
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .slider-container {
-            position: relative;
-            width: 100%;
-        }
-        .slider-container .tick-marks {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            left: 0;
-            right: 0;
-            height: 100%;
+        /* Custom checkbox styles */
+        .checkbox-label {
             display: flex;
-            justify-content: space-between;
-            pointer-events: none;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
-        .slider-container .tick-marks span {
-            width: 2px;
-            height: 12px;
-            background-color: #9ca3af;
-            transform: translateY(-50%);
-            margin-top: 4px;
+        .checkbox-label:hover {
+            background-color: #f3f4f6;
         }
-        .slider-labels {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
+        .checkbox-definition {
+            font-size: 0.8rem;
             color: #6b7280;
-            margin-top: 0.5rem;
-        }
-        .slider-labels > div {
-            flex: 1;
-            text-align: center;
-        }
-        .slider-labels > div:first-child {
-            text-align: left;
-        }
-        .slider-labels > div:last-child {
-            text-align: right;
+            margin-left: 0.5rem;
+            font-weight: normal;
         }
     </style>
 </head>
@@ -88,227 +39,76 @@
 
         <div class="p-6 bg-gray-50 rounded-lg border border-gray-200 mb-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-2">How to Use This Form</h2>
-            <p class="text-gray-600 mb-4">This rubric is designed to help you objectively evaluate a news story's suitability for translation. By scoring each article, you can ensure we are prioritizing content that is most relevant, timely, and impactful for our Spanish-speaking audience.</p>
+            <p class="text-gray-600 mb-4">This simplified rubric focuses solely on <strong>source diversity</strong> as the primary indicator for translation priority. By selecting all relevant sources, you ensure we are prioritizing content that is community-centered and authentically sourced.</p>
             <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                <li>Read each question carefully, as well as the section's overall definition.</li>
-                <li>Use the horizontal slider for each question to select a score from 1 to 5. The descriptive words below the slider correspond to scores 1, 3, and 5 to guide your selection.</li>
-                <li>After scoring all questions, click the "Evaluate Priority" button.</li>
-                <li>The form will automatically calculate the total score and determine the article's translation priority.</li>
+                <li>Read the question and select all relevant Latino/Spanish-speaking source types.</li>
+                <li>Click <strong>"Evaluate Sources"</strong> to immediately receive the priority score and recommendation based on source diversity.</li>
             </ol>
         </div>
 
         <form id="rubricForm" class="space-y-6">
             <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Relevance & Impact <span class="text-sm font-normal text-gray-500">(Total Possible: 20)</span></h2>
-                <p class="text-gray-600 mb-4">"Relevance & Impact" evaluates whether a story is essential for the daily lives and civic participation of the Latino community. A story with high relevance provides crucial information that helps community members make informed decisions, access resources, or understand events that directly affect them.</p>
+                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Sources <span class="text-sm font-normal text-gray-500">(Total Possible: 9)</span></h2>
+                <p class="text-gray-600 mb-4">The "Sources" metric evaluates the depth of community engagement in the story by analyzing the types of Latino/Spanish-speaking voices featured.</p>
+                
                 <div class="space-y-6">
                     <div class="border-b pb-4">
-                        <label for="relevance1" class="block text-gray-700 font-medium mb-2">How much does the story directly feature sources, events, or data points from the Latino community?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="relevance1" name="relevance1" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">A little bit</span>
-                                    <span class="w-1/3 text-center">A fair amount</span>
-                                    <span class="w-1/3 text-right">All of it</span>
-                                </div>
+                        <label class="block text-gray-700 font-medium mb-2">Which types of Latino/Spanish-speaking sources are featured in the story?</label>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-grow space-y-2 text-sm" id="relevance1Checkboxes">
+                                <!-- Checkbox options -->
+                                <label class="checkbox-label border border-gray-200">
+                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="font-medium ml-2">Affected (2 pts)</span>
+                                    <span class="checkbox-definition">— Directly impacted by the issue (e.g., event attendee, renter, person receiving services).</span>
+                                </label>
+                                <label class="checkbox-label border border-gray-200">
+                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="font-medium ml-2">Expert/Analyst (1 pt)</span>
+                                    <span class="checkbox-definition">— Provides professional, data-driven, or cultural expert insight.</span>
+                                </label>
+                                <label class="checkbox-label border border-gray-200">
+                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="font-medium ml-2">Official/Spokesperson (1 pt)</span>
+                                    <span class="checkbox-definition">— Represents a government agency, community-based organization, or institution.</span>
+                                </label>
+                                <label class="checkbox-label border border-gray-200">
+                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="font-medium ml-2">Subject/Doer (2 pts)</span>
+                                    <span class="checkbox-definition">— The person the story is primarily about (e.g., new business owner, community organizer).</span>
+                                </label>
+                                <label class="checkbox-label border border-gray-200">
+                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="font-medium ml-2">Reactor/Opinion (1 pt)</span>
+                                    <span class="checkbox-definition">— Gives a personal reaction or general comment, but not central to the facts.</span>
+                                </label>
+                                <label class="checkbox-label border border-gray-200">
+                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="font-medium ml-2">Spanish-speaker (2 pts)</span>
+                                    <span class="checkbox-definition">— Quote is used in Spanish (translated or original).</span>
+                                </label>
+                                <label class="checkbox-label border border-gray-200 bg-gray-100 mt-2">
+                                    <input type="checkbox" id="noneSource" name="sourceType" data-point="0" class="h-4 w-4 text-gray-500 border-gray-300 rounded focus:ring-gray-400">
+                                    <span class="font-medium ml-2 text-gray-700">None</span>
+                                    <span class="checkbox-definition">— No Latino or Spanish-speaking sources featured.</span>
+                                </label>
                             </div>
-                            <span id="relevance1Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                    <div class="border-b pb-4">
-                        <label for="relevance2" class="block text-gray-700 font-medium mb-2">How much does the story address a known information need or topic of high interest to the Latino community?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="relevance2" name="relevance2" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">Barely</span>
-                                    <span class="w-1/3 text-center">A fair amount</span>
-                                    <span class="w-1/3 text-right">Directly</span>
-                                </div>
+                            <div class="flex-shrink-0">
+                                <span class="block text-gray-700 font-bold text-xl w-8 text-center" id="relevance1Value">0</span>
+                                <span class="block text-gray-500 text-xs">Points</span>
                             </div>
-                            <span id="relevance2Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                    <div class="border-b pb-4">
-                        <label for="relevance3" class="block text-gray-700 font-medium mb-2">How much does the story provide critical information that may help a general community member navigate their daily life?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="relevance3" name="relevance3" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">A little bit</span>
-                                    <span class="w-1/3 text-center">A fair amount</span>
-                                    <span class="w-1/3 text-right">All of it</span>
-                                </div>
-                            </div>
-                            <span id="relevance3Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="relevance4" class="block text-gray-700 font-medium mb-2">How much does the story encourage community participation, such as attending an event or utilizing a service?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="relevance4" name="relevance4" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">Barely</span>
-                                    <span class="w-1/3 text-center">A fair amount</span>
-                                    <span class="w-1/3 text-right">Directly</span>
-                                </div>
-                            </div>
-                            <span id="relevance4Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Timeliness <span class="text-sm font-normal text-gray-500">(Total Possible: 10)</span></h2>
-                <p class="text-gray-600 mb-4">"Timeliness" prioritizes content based on its recency and urgency. Breaking news, alerts, and time-sensitive announcements are given a higher priority for immediate translation to ensure the community has access to critical information when it matters most.</p>
-                <div class="space-y-6">
-                    <div class="border-b pb-4">
-                        <label for="timeliness1" class="block text-gray-700 font-medium mb-2">Is the story share time-sensitive or critical information?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="timeliness1" name="timeliness1" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">Slightly</span>
-                                    <span class="w-1/3 text-center">Substantial</span>
-                                    <span class="w-1/3 text-right">Extremely</span>
-                                </div>
-                            </div>
-                            <span id="timeliness1Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="timeliness2" class="block text-gray-700 font-medium mb-2">Is the article's information evergreen content?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="timeliness2" name="timeliness2" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">Slightly</span>
-                                    <span class="w-1/3 text-center">Substantial</span>
-                                    <span class="w-1/3 text-right">Extremely</span>
-                                </div>
-                            </div>
-                            <span id="timeliness2Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Cultural Resonance <span class="text-sm font-normal text-gray-500">(Total Possible: 15)</span></h2>
-                <p class="text-gray-600 mb-4">"Cultural Resonance" is when the article reflects and respects cultural values, including authentic community voices, or highlighting positive stories and assets, trust is built and visibility occurs.</p>
-                <div class="space-y-6">
-                    <div class="border-b pb-4">
-                        <label for="resonance1" class="block text-gray-700 font-medium mb-2">Does the story hold power accountable on an issue that disproportionately affects the Latino community?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="resonance1" name="resonance1" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">Barely</span>
-                                    <span class="w-1/3 text-center">A fair amount</span>
-                                    <span class="w-1/3 text-right">Completely</span>
-                                </div>
-                            </div>
-                            <span id="resonance1Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                    <div class="border-b pb-4">
-                        <label for="resonance2" class="block text-gray-700 font-medium mb-2">Is the story compelling and unique, adding a perspective not already covered by other media?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="resonance2" name="resonance2" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">Barely</span>
-                                    <span class="w-1/3 text-center">A fair amount</span>
-                                    <span class="w-1/3 text-right">Absolutely</span>
-                                </div>
-                            </div>
-                            <span id="resonance2Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="resonance3" class="block text-gray-700 font-medium mb-2">Could this story be amplified by Spanish-first/bilingual-centered news/media outlets?</label>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative w-full">
-                                <input type="range" id="resonance3" name="resonance3" min="1" max="5" step="1" value="1" class="w-full">
-                                <div class="absolute top-0 w-full h-full flex justify-between pointer-events-none px-1">
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 25%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 50%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2" style="left: 75%;"></span>
-                                    <span class="w-1 h-4 bg-gray-400 -mt-2"></span>
-                                </div>
-                                <div class="flex justify-between w-full text-xs text-gray-500 mt-2">
-                                    <span class="w-1/3 text-left">Barely</span>
-                                    <span class="w-1/3 text-center">A fair amount</span>
-                                    <span class="w-1/3 text-right">Absolutely</span>
-                                </div>
-                            </div>
-                            <span id="resonance3Value" class="text-gray-700 font-bold text-xl w-8 text-center">1</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Reflection Prompt (Hidden unless only 'None' is checked) -->
+            <div id="noneReflection" class="p-4 bg-red-100 border-l-4 border-red-500 text-red-700 hidden" role="alert">
+                <p class="font-bold">⚠️ Source Reflection Required</p>
+                <p class="text-sm mt-1">You selected "None." Please take a moment to confirm: Is the lack of Latino/Spanish-speaking sources appropriate for this story's subject matter, or does this indicate a missed opportunity for equitable representation?</p>
             </div>
             
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition duration-300">Evaluate Priority</button>
+            <button type="submit" id="evaluateButton" disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-lg transition duration-300 cursor-not-allowed">Evaluate Sources</button>
         </form>
 
         <div id="results" class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 text-center hidden">
@@ -319,59 +119,193 @@
                     <p class="text-2xl font-bold text-gray-800">Total Score: <span id="totalScore" class="text-blue-600"></span></p>
                     <p class="text-2xl font-bold text-gray-800">Priority: <span id="priority" class="text-blue-600"></span></p>
                 </div>
+                <div id="justificationContainer" class="mt-4 text-gray-700 w-full max-w-lg mx-auto text-left">
+                    <p id="justification" class="mb-4"></p>
+                </div>
             </div>
         </div>
 
         <div class="mt-8 pt-4 border-t border-gray-300 text-center text-sm text-gray-500">
             <p class="mb-2">By: Cristobal Villegas</p>
-            <p><strong>Disclaimer:</strong> This tool is meant to be a guide for prioritization and may not be 100% accurate. If you encounter any bugs or issues, please email me at <a href="mailto:villegcm@gmail.com" class="text-blue-600 hover:underline">villegcm@gmail.com</a>.</p>
+            <p><strong>Disclaimer:</strong> This tool is meant to be a guide for prioritization and may not be 100% accurate. If you encounter any bugs or issues, please email me at <a href="mailto:cvillegas@sltrib.com" class="text-blue-600 hover:underline">cvillegas@sltrib.com</a>.</p>
         </div>
     </div>
 
     <script>
+        // DOM Elements
+        const relevance1Checkboxes = document.getElementById('relevance1Checkboxes');
+        const relevance1ValueSpan = document.getElementById('relevance1Value');
+        const evaluateButton = document.getElementById('evaluateButton');
+        const resultsDiv = document.getElementById('results');
+        const justificationContainer = document.getElementById('justificationContainer');
+        const noneReflectionDiv = document.getElementById('noneReflection');
+
+        let r1_answered = false; 
+
+        // --- Q1: Checkbox Logic ---
+
+        function calculateRelevance1Score() {
+            const checkboxes = relevance1Checkboxes.querySelectorAll('input[name="sourceType"]');
+            const noneCheckbox = document.getElementById('noneSource');
+            
+            // Check for any user interaction
+            let interaction = Array.from(checkboxes).some(cb => cb.checked);
+            
+            r1_answered = interaction;
+
+            let score = 0;
+            let onlyNoneChecked = noneCheckbox.checked && Array.from(checkboxes).filter(cb => cb.checked).length === 1;
+
+            if (noneCheckbox.checked) {
+                // If None is checked, score is 0 and all others are disabled
+                score = 0;
+                checkboxes.forEach(cb => {
+                    if (cb.id !== 'noneSource') {
+                        cb.checked = false;
+                        cb.disabled = true;
+                    }
+                });
+                // Show reflection only if 'None' is the single, explicit selection
+                if (onlyNoneChecked) {
+                    noneReflectionDiv.classList.remove('hidden');
+                } else {
+                    noneReflectionDiv.classList.add('hidden');
+                }
+            } else {
+                // If None is unchecked, check for score from others
+                checkboxes.forEach(cb => {
+                    cb.disabled = false;
+                    if (cb.id !== 'noneSource' && cb.checked) {
+                        score += parseInt(cb.getAttribute('data-point'));
+                    }
+                });
+                
+                // Hide reflection if sources are checked or if no boxes are checked yet
+                noneReflectionDiv.classList.add('hidden');
+            }
+
+            // Edge case: If the user unchecks everything, treat it as not answered yet (disables button)
+            if (!interaction) {
+                r1_answered = false;
+                noneReflectionDiv.classList.add('hidden');
+            }
+
+            relevance1ValueSpan.textContent = score;
+            
+            // Update button state based on r1_answered
+            if (r1_answered) {
+                // ENABLED STATE
+                evaluateButton.disabled = false;
+                evaluateButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                evaluateButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                evaluateButton.textContent = "Evaluate Sources";
+            } else {
+                // DISABLED STATE
+                evaluateButton.disabled = true;
+                evaluateButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+                evaluateButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'bg-green-600', 'hover:bg-green-700');
+                evaluateButton.textContent = "Evaluate Sources"; 
+            }
+
+            return score;
+        }
+
+        relevance1Checkboxes.addEventListener('change', calculateRelevance1Score);
+
+
+        // Initial state setup:
+        evaluateButton.disabled = true;
+        evaluateButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+        evaluateButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+
+        calculateRelevance1Score();
+        
         document.getElementById('rubricForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
-            const form = event.target;
-            const relevance1 = parseInt(form.relevance1.value);
-            const relevance2 = parseInt(form.relevance2.value);
-            const relevance3 = parseInt(form.relevance3.value);
-            const relevance4 = parseInt(form.relevance4.value);
-            const timeliness1 = parseInt(form.timeliness1.value);
-            const timeliness2 = parseInt(form.timeliness2.value);
-            const resonance1 = parseInt(form.resonance1.value);
-            const resonance2 = parseInt(form.resonance2.value);
-            const resonance3 = parseInt(form.resonance3.value);
+            // Recalculate current score
+            const relevance1Score = calculateRelevance1Score();
             
-            const totalScore = relevance1 + relevance2 + relevance3 + relevance4 + timeliness1 + timeliness2 + resonance1 + resonance2 + resonance3;
+            // Since only Q1 remains, we immediately call the final result handler
+            handleFinalResult(relevance1Score);
+
+            // SCROLL TO RESULTS
+            resultsDiv.classList.remove('hidden'); 
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+
+        // Function to handle Final Score Calculation and Result Display
+        function handleFinalResult(relevance1Score) {
+            
+            const totalScore = relevance1Score;
             
             let priorityText = "";
             let priorityImage = "";
+            let justificationContent = "";
 
-            if (totalScore >= 30 || timeliness1 === 5) {
-                priorityText = "High Priority";
-                priorityImage = "🚀";
-            } else if (totalScore >= 22) {
-                priorityText = "Standard Priority";
-                priorityImage = "⚙️";
+            // PRIORITY LOGIC (Max Score: 9)
+            // Low: 0-2, High: 3-5, Very High: 6-9
+            
+            if (totalScore >= 6) {
+                priorityText = "VERY HIGH PRIORITY";
+                priorityImage = "⭐⭐";
+                justificationContent = `
+                    <p class="mb-4">This article qualifies for <strong>VERY HIGH PRIORITY</strong> with a Sources Score of ${totalScore} out of 9. This score signifies <strong>exceptional community engagement and sourcing</strong>.</p>
+                    <div class="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
+                        <p class="font-bold">🎉 Exceptional Sourcing: Celebrating Community-Driven Reporting</p>
+                        <p class="text-sm mt-2">Thank you for your commitment to equitable sourcing! This score is a direct result of successfully centering Latino and Spanish-speaking voices in your story, ensuring maximum relevance and trust. Your work is a model for <strong>community-first journalism</strong>.</p>
+                        <p class="font-bold mt-4">🚀 Strategic Next Steps: Maximize Impact</p>
+                        <ul class="list-disc list-inside space-y-2 mt-2">
+                            <li><strong>Contact Editor IMMEDIATELY:</strong> Discuss making this a <strong>Spanish-First Article</strong> (primary language publication).</li>
+                            <li><strong>Creative Content:</strong> Produce a <strong>short Spanish video</strong> (30-60 seconds) summarizing the key points for social media amplification.</li>
+                            <li><strong>Social Strategy:</strong> Ensure all English social media posts related to this story include a Spanish translation.</li>
+                            <li><strong>Partnership Amplification:</strong> Immediately share the Spanish-First article with local Spanish-first media outlets (e.g., Avanza, Univision) to maximize reach.</li>
+                        </ul>
+                    </div>
+                `;
+                justificationContainer.classList.add('text-left', 'max-w-lg');
+                
+            } else if (totalScore >= 3) {
+                priorityText = "HIGH PRIORITY";
+                priorityImage = "🔥";
+                justificationContent = `
+                    <p class="mb-4">This article qualifies for <strong>HIGH PRIORITY</strong> because the Sources Score is ${totalScore} out of 9, meeting the critical threshold of 3 points. This indicates strong community sourcing and high relevance to our Latino/Spanish-speaking audience.</p>
+                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+                        <p class="font-bold">👍 Strong Sourcing: Building Trust and Relevance</p>
+                        <p class="text-sm mt-2">Great work! Achieving a High Priority score shows you successfully incorporated key Latino and Spanish-speaking voices. This strong sourcing is fundamental to building trust with our audience.</p>
+                        <p class="font-bold mt-4">✅ Next Step: Contact Your Editor</p>
+                        <p>Immediate translation is recommended. Please contact your editor to discuss the next steps in the translation workflow and to schedule the article for publication.</p>
+                    </div>
+                `;
+                justificationContainer.classList.add('text-left', 'max-w-lg'); 
+
             } else {
                 priorityText = "Low Priority";
                 priorityImage = "📉";
+                justificationContent = `
+                    <p class="mb-4">This article scored ${totalScore} out of 9, landing in the <strong>LOW PRIORITY</strong> category. A score of 0-2 suggests the article currently lacks the necessary community voices to warrant immediate translation resources, but this is a chance to elevate your reporting.</p>
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+                        <p class="font-bold">🎯 Why Community Sourcing Matters</p>
+                        <p class="text-sm mt-2">Including Latino and Spanish-speaking sources is crucial because it ensures <strong>accuracy</strong>, builds <strong>trust</strong> with a core audience, and prevents the perpetuation of biased or incomplete narratives. Without these voices, the story may miss critical context or be irrelevant to the community it affects.</p>
+                        <p class="font-bold mt-4">💡 Strategic Sourcing Tips</p>
+                        <ul class="list-disc list-inside space-y-2 mt-2 text-sm">
+                            <li><strong>Identify Community Hubs:</strong> Instead of relying on official public relations lists, contact local community-based organizations (e.g., health clinics, non-profits, cultural centers) for expert referrals.</li>
+                            <li><strong>Lead with Language:</strong> When seeking sources, always ask if they prefer to speak in Spanish. This simple act builds immediate rapport and unlocks richer quotes (which scores 2 points).</li>
+                            <li><strong>Broaden the Net:</strong> Look beyond "officials." Seek out <strong>Affected</strong> residents or <strong>Subject/Doer</strong> sources (business owners, organizers, artists) who provide the human impact of the story.</li>
+                        </ul>
+                        <p class="mt-3">Use these strategies in your next reporting phase to strengthen the article's relevance before re-evaluating for translation.</p>
+                    </div>
+                `;
+                justificationContainer.classList.add('text-left', 'max-w-lg'); 
             }
 
             document.getElementById('totalScore').textContent = totalScore;
             document.getElementById('priority').textContent = priorityText;
             document.getElementById('resultImage').textContent = priorityImage;
-            document.getElementById('results').classList.remove('hidden');
-        });
-
-        const sliders = document.querySelectorAll('input[type="range"]');
-        sliders.forEach(slider => {
-            const valueSpan = document.getElementById(slider.id + 'Value');
-            slider.addEventListener('input', () => {
-                valueSpan.textContent = slider.value;
-            });
-        });
+            document.getElementById('justificationContainer').innerHTML = justificationContent;
+            
+        }
     </script>
 </body>
 </html>
