@@ -12,17 +12,30 @@
         .hidden-section {
             display: none;
         }
-        /* Custom checkbox styles */
-        .checkbox-label {
+        /* Custom radio/checkbox styles */
+        .choice-label, .checkbox-label {
             display: flex;
-            align-items: center;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
+            padding: 10px; /* Increased internal padding */
+            border-radius: 8px; /* Slightly more rounded */
+            border: 2px solid #e5e7eb;
             transition: all 0.2s;
+            margin-bottom: 8px;
         }
-        .checkbox-label:hover {
-            background-color: #f3f4f6;
+        .choice-label:hover, .checkbox-label:hover {
+            border-color: #93c5fd; /* blue-300 */
+        }
+        
+        .radio-input:checked + .choice-label {
+            border-color: #3b82f6; /* blue-500 */
+            background-color: #eff6ff; /* blue-50 */
+        }
+        .radio-input:checked + .choice-label .choice-title {
+            color: #1d4ed8; /* blue-700 */
+        }
+
+        .checkbox-label {
+            border: 1px solid #e5e7eb;
         }
         .checkbox-definition {
             font-size: 0.8rem;
@@ -30,71 +43,237 @@
             margin-left: 0.5rem;
             font-weight: normal;
         }
+        .q-content {
+            max-height: initial; /* Removed max-height for standard open visibility */
+            transition: max-height 0.3s ease-in-out;
+        }
+        .q-content.collapsed {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            overflow: hidden;
+            border-bottom: none;
+        }
+        .q-row {
+            padding: 12px; /* Increased padding */
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        /* New style for aligning Q2 labels */
+        .source-content-wrapper {
+            display: flex;
+            align-items: flex-start;
+            margin-left: 0.5rem; /* Space after checkbox */
+            width: 100%;
+        }
+        .source-term {
+            min-width: 190px; /* Fixed width for alignment */
+            font-weight: 500;
+            color: #1f2937; /* gray-800 */
+            flex-shrink: 0;
+            margin-right: 0.5rem;
+        }
+        .source-definition {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: normal;
+            flex-grow: 1;
+        }
+        /* Style for hiding the score box during selection */
+        .score-box-hidden {
+            visibility: hidden;
+            background-color: transparent !important;
+            border: none !important;
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-8">
     <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Article Translation Suitability Rubric</h1>
-        <p class="text-center text-gray-600 mb-8">Evaluate a story's potential for translation to effectively serve Spanish-speaking communities.</p>
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Translation Prioritization Rubric</h1>
+        <p class="text-center text-gray-600 mb-8">Evaluate a story's potential for translation based on <strong>Audience Demand</strong> and <strong>Sourcing Quality</strong>. (Max Score: 22)</p>
 
         <div class="p-6 bg-gray-50 rounded-lg border border-gray-200 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-2">How to Use This Form</h2>
-            <p class="text-gray-600 mb-4">This simplified rubric focuses solely on <strong>source diversity</strong> as the primary indicator for translation priority. By selecting all relevant sources, you ensure we are prioritizing content that is community-centered and authentically sourced.</p>
+            <h2 class="2xl font-semibold text-gray-700 mb-2">How to Use This Form</h2>
+            <p class="text-gray-600 mb-4">This tool provides a combined score from <strong>Audience Relevance</strong> and <strong>Sourcing Quality</strong> to give you an immediate translation priority level.</p>
             <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                <li>Read the question and select all relevant Latino/Spanish-speaking source types.</li>
-                <li>Click <strong>"Evaluate Sources"</strong> to immediately receive the priority score and recommendation based on source diversity.</li>
+                <li>Complete all three questions in the <strong>Audience Relevance Filter</strong> (Q1).</li>
+                <li>Complete all checkboxes in the <strong>Sources</strong> question (Q2).</li>
+                <li>Click <strong>"Evaluate Priority"</strong> at the bottom to get the result and next steps.</li>
             </ol>
         </div>
 
         <form id="rubricForm" class="space-y-6">
-            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-2">Sources <span class="text-sm font-normal text-gray-500">(Total Possible: 9)</span></h2>
+
+            <!-- STAGE 1: AUDIENCE RELEVANCE (Q1) -->
+            <div id="audienceSection" class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <div id="q1Header" class="flex justify-between items-center cursor-pointer mb-4">
+                    <h2 class="2xl font-semibold text-gray-700">Q1. Audience Relevance Filter <span class="text-sm font-normal text-gray-500">(Max 12 Points)</span></h2>
+                </div>
+                
+                <div id="q1Content" class="q-content space-y-6 pb-4">
+                    <p class="text-gray-600 mb-4">This metric determines if the subject matter aligns with the high-demand information needs of the Spanish-speaking community.</p>
+
+                    <!-- Q1A: What is your story covering? (News Category Demand - Max 4 pts) -->
+                    <div class="q-row p-3 border rounded-lg bg-white shadow-sm">
+                        <p class="font-semibold text-gray-800 mb-3">Q1A: What is your story covering?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Option 4 Pts -->
+                            <input type="radio" id="q1a_4" name="q1a" value="4" class="hidden radio-input">
+                            <label for="q1a_4" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Critical Resource Topics</span>
+                                <span class="text-sm text-gray-500">Community/Governmental Resources & Services, Health Reporting, Housing, Education, Migration, Climate Justice & Public Lands</span>
+                            </label>
+                            <!-- Option 4 Pts -->
+                            <input type="radio" id="q1a_2" name="q1a" value="4" class="hidden radio-input">
+                            <label for="q1a_2" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">High Affinity Topics</span>
+                                <span class="text-sm text-gray-500">Latino-serving Small Business/Entrepreneurship, LGBTQIA+ Community, Crime Reporting/Victims of Violence, Public Transportation, Community Events (Culture), Solutions</span>
+                            </label>
+                            <!-- Option 2 Pts (General) -->
+                            <input type="radio" id="q1a_1" name="q1a" value="2" class="hidden radio-input">
+                            <label for="q1a_1" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">General Interest Topics</span>
+                                <span class="text-sm text-gray-500">Politics, Religion, Energy</span>
+                            </label>
+                            <!-- Option 1 Pt (Other) -->
+                            <input type="radio" id="q1a_0" name="q1a" value="1" class="hidden radio-input">
+                            <label for="q1a_0" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Other</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Q1B: Where is the story situated? (Geographic Concentration - Max 4 pts) -->
+                    <div class="q-row p-3 border rounded-lg bg-white shadow-sm">
+                        <p class="font-semibold text-gray-800 mb-3">Q1B: Where is the story situated?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Option 4 Pts -->
+                            <input type="radio" id="q1b_4" name="q1b" value="4" class="hidden radio-input">
+                            <label for="q1b_4" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Wasatch Front</span>
+                                <span class="text-sm text-gray-500">Weber, Davis, Salt Lake, and Utah counties</span>
+                            </label>
+                            <!-- Option 3 Pts -->
+                            <input type="radio" id="q1b_2" name="q1b" value="3" class="hidden radio-input">
+                            <label for="q1b_2" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Key Rural Areas</span>
+                                <span class="text-sm text-gray-500">Summit, Wasatch, Cache, Tooele, Carbon counties</span>
+                            </label>
+                            <!-- Option 2 Pts (Statewide/Other Counties) -->
+                            <input type="radio" id="q1b_1a" name="q1b" value="2" class="hidden radio-input">
+                            <label for="q1b_1a" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Statewide / Other Utah Counties</span>
+                            </label>
+                            <!-- Option 1 Pt (Nationwide/International) -->
+                            <input type="radio" id="q1b_1b" name="q1b" value="1" class="hidden radio-input">
+                            <label for="q1b_1b" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Nationwide / International</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q1C: Who is the intended audience? (Demographic/Socioeconomic Need - Max 4 pts) -->
+                    <div class="q-row p-3 border rounded-lg bg-white shadow-sm">
+                        <p class="font-semibold text-gray-800 mb-3">Q1C: Who is the intended audience?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Option 4 Pts (Parents/K-12 Families) -->
+                            <input type="radio" id="q1c_3a" name="q1c" value="4" class="hidden radio-input">
+                            <label for="q1c_3a" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Parents/K-12 Families</span>
+                            </label>
+                            <!-- Option 4 Pts (Service Workers) -->
+                            <input type="radio" id="q1c_3b" name="q1c" value="4" class="hidden radio-input">
+                            <label for="q1c_3b" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Service Workers</span>
+                            </label>
+                            <!-- Option 2 Pts (General Adults) -->
+                            <input type="radio" id="q1c_1a" name="q1c" value="2" class="hidden radio-input">
+                            <label for="q1c_1a" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">General Adults</span>
+                            </label>
+                            <!-- Option 1 Pt (Other) -->
+                            <input type="radio" id="q1c_1b" name="q1c" value="1" class="hidden radio-input">
+                            <label for="q1c_1b" class="choice-label flex-col items-start space-y-1">
+                                <span class="choice-title font-bold text-base text-gray-700">Other</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- STAGE 2: SOURCES (Q2 - SHOWN INITIALLY) -->
+            <div id="sourcesSection" class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <h2 class="2xl font-semibold text-gray-700 mb-2">Q2. Sources</h2>
                 <p class="text-gray-600 mb-4">The "Sources" metric evaluates the depth of community engagement in the story by analyzing the types of Latino/Spanish-speaking voices featured.</p>
                 
                 <div class="space-y-6">
                     <div class="border-b pb-4">
                         <label class="block text-gray-700 font-medium mb-2">Which types of Latino/Spanish-speaking sources are featured in the story?</label>
                         <div class="flex items-start space-x-4">
-                            <div class="flex-grow space-y-2 text-sm" id="relevance1Checkboxes">
+                            <div class="flex-grow space-y-2 text-sm" id="sourceCheckboxes">
                                 <!-- Checkbox options -->
-                                <label class="checkbox-label border border-gray-200">
-                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                    <span class="font-medium ml-2">Affected (2 pts)</span>
-                                    <span class="checkbox-definition">— Directly impacted by the issue (e.g., event attendee, renter, person receiving services).</span>
+                                <label class="checkbox-label border border-gray-200 items-start">
+                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">Affected</span>
+                                        <span class="source-definition">— Directly impacted by the issue (e.g., event attendee, renter, person receiving services).</span>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label border border-gray-200">
-                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                    <span class="font-medium ml-2">Expert/Analyst (1 pt)</span>
-                                    <span class="checkbox-definition">— Provides professional, data-driven, or cultural expert insight.</span>
+                                <label class="checkbox-label border border-gray-200 items-start">
+                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">Expert/Analyst</span>
+                                        <span class="source-definition">— Provides professional, data-driven, or cultural expert insight.</span>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label border border-gray-200">
-                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                    <span class="font-medium ml-2">Official/Spokesperson (1 pt)</span>
-                                    <span class="checkbox-definition">— Represents a government agency, community-based organization, or institution.</span>
+                                <label class="checkbox-label border border-gray-200 items-start">
+                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">Official/Spokesperson</span>
+                                        <span class="source-definition">— Represents a government agency, community-based organization, or institution.</span>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label border border-gray-200">
-                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                    <span class="font-medium ml-2">Subject/Doer (2 pts)</span>
-                                    <span class="checkbox-definition">— The person the story is primarily about (e.g., new business owner, community organizer).</span>
+                                <label class="checkbox-label border border-gray-200 items-start">
+                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">Subject/Doer</span>
+                                        <span class="source-definition">— The person the story is primarily about (e.g., new business owner, community organizer).</span>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label border border-gray-200">
-                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                    <span class="font-medium ml-2">Reactor/Opinion (1 pt)</span>
-                                    <span class="checkbox-definition">— Gives a personal reaction or general comment, but not central to the facts.</span>
+                                <label class="checkbox-label border border-gray-200 items-start">
+                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">Reactor/Opinion</span>
+                                        <span class="source-definition">— Gives a personal reaction or general comment, but not central to the facts.</span>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label border border-gray-200">
-                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                    <span class="font-medium ml-2">Spanish-speaker (2 pts)</span>
-                                    <span class="checkbox-definition">— Quote is used in Spanish (translated or original).</span>
+                                <label class="checkbox-label border border-gray-200 items-start">
+                                    <input type="checkbox" name="sourceType" data-point="2" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">Spanish-speaker</span>
+                                        <span class="source-definition">— Quote is used in Spanish (translated or original).</span>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label border border-gray-200 bg-gray-100 mt-2">
-                                    <input type="checkbox" id="noneSource" name="sourceType" data-point="0" class="h-4 w-4 text-gray-500 border-gray-300 rounded focus:ring-gray-400">
-                                    <span class="font-medium ml-2 text-gray-700">None</span>
-                                    <span class="checkbox-definition">— No Latino or Spanish-speaking sources featured.</span>
+                                <label class="checkbox-label border border-gray-200 items-start">
+                                    <input type="checkbox" name="sourceType" data-point="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">Attempted to contact</span>
+                                        <span class="source-definition">Latino/Spanish-speakers — Efforts were made, but sources were unavailable or did not respond.</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-label border border-gray-200 bg-gray-100 mt-2 items-start">
+                                    <input type="checkbox" id="noneSource" name="sourceType" data-point="0" class="h-4 w-4 text-gray-500 border-gray-300 rounded focus:ring-gray-400 mt-1">
+                                    <div class="source-content-wrapper">
+                                        <span class="source-term">None</span>
+                                        <span class="source-definition">— No Latino or Spanish-speaking sources featured.</span>
+                                    </div>
                                 </label>
                             </div>
-                            <div class="flex-shrink-0">
-                                <span class="block text-gray-700 font-bold text-xl w-8 text-center" id="relevance1Value">0</span>
+                            <div class="flex-shrink-0 score-box-hidden">
+                                <span class="block text-gray-700 font-bold text-xl w-8 text-center" id="sourcesValue">0</span>
                                 <span class="block text-gray-500 text-xs">Points</span>
                             </div>
                         </div>
@@ -102,22 +281,26 @@
                 </div>
             </div>
 
-            <!-- Reflection Prompt (Hidden unless only 'None' is checked) -->
-            <div id="noneReflection" class="p-4 bg-red-100 border-l-4 border-red-500 text-red-700 hidden" role="alert">
-                <p class="font-bold">⚠️ Source Reflection Required</p>
+            <!-- Reflection Prompt (Hidden unless only 'None' is checked in Q2) -->
+            <div id="noneReflection" class="p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700 hidden" role="alert">
+                <p class="font-bold text-blue-800">⚠️ Source Reflection</p>
                 <p class="text-sm mt-1">You selected "None." Please take a moment to confirm: Is the lack of Latino/Spanish-speaking sources appropriate for this story's subject matter, or does this indicate a missed opportunity for equitable representation?</p>
             </div>
+
+            <!-- EVALUATE FINAL PRIORITY BUTTON (Single, at the end) -->
+            <div class="pt-2"> 
+                <button type="submit" id="evaluateButton" disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-lg transition duration-300 cursor-not-allowed">Evaluate Priority</button>
+            </div>
             
-            <button type="submit" id="evaluateButton" disabled class="w-full bg-gray-400 text-white font-bold py-3 rounded-lg transition duration-300 cursor-not-allowed">Evaluate Sources</button>
         </form>
 
         <div id="results" class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200 text-center hidden">
-            <h2 class="text-xl font-bold mb-4">Evaluation Result</h2>
+            <h2 class="xl font-bold mb-4">Evaluation Result</h2>
             <div class="flex flex-col items-center">
                 <div id="resultImage" class="text-6xl mb-4"></div>
                 <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                    <p class="text-2xl font-bold text-gray-800">Total Score: <span id="totalScore" class="text-blue-600"></span></p>
-                    <p class="text-2xl font-bold text-gray-800">Priority: <span id="priority" class="text-blue-600"></span></p>
+                    <p class="2xl font-bold text-gray-800">Total Score: <span id="totalScore" class="text-blue-600"></span></p>
+                    <p class="2xl font-bold text-gray-800">Priority: <span id="priority" class="text-blue-600"></span></p>
                 </div>
                 <div id="justificationContainer" class="mt-4 text-gray-700 w-full max-w-lg mx-auto text-left">
                     <p id="justification" class="mb-4"></p>
@@ -133,127 +316,190 @@
 
     <script>
         // DOM Elements
-        const relevance1Checkboxes = document.getElementById('relevance1Checkboxes');
-        const relevance1ValueSpan = document.getElementById('relevance1Value');
+        const audienceRadioGroups = ['q1a', 'q1b', 'q1c'];
+        const sourcesSection = document.getElementById('sourcesSection');
+        const sourceCheckboxesContainer = document.getElementById('sourceCheckboxes');
+        const sourcesValueSpan = document.getElementById('sourcesValue');
+        const sourcesScoreBox = document.querySelector('#sourcesSection .flex-shrink-0'); // Select the div container
         const evaluateButton = document.getElementById('evaluateButton');
         const resultsDiv = document.getElementById('results');
         const justificationContainer = document.getElementById('justificationContainer');
         const noneReflectionDiv = document.getElementById('noneReflection');
+        const noneSourceCheckbox = document.getElementById('noneSource');
+        
+        // Q1 Toggle Elements
+        const q1Content = document.getElementById('q1Content');
+        const q1Header = document.getElementById('q1Header');
 
-        let r1_answered = false; 
+        let q1_score = 0; // Audience Score (Max 12)
+        let q2_score = 0; // Sources Score (Max 10)
 
-        // --- Q1: Checkbox Logic ---
+        // --- Utility Functions ---
 
-        function calculateRelevance1Score() {
-            const checkboxes = relevance1Checkboxes.querySelectorAll('input[name="sourceType"]');
-            const noneCheckbox = document.getElementById('noneSource');
-            
-            // Check for any user interaction
-            let interaction = Array.from(checkboxes).some(cb => cb.checked);
-            
-            r1_answered = interaction;
-
+        // Checks if all Q1 radio groups have a selection
+        function areAllQ1Answered() {
+            return audienceRadioGroups.every(groupName => {
+                const radios = document.getElementsByName(groupName);
+                return Array.from(radios).some(radio => radio.checked);
+            });
+        }
+        
+        function calculateQ1Score() {
             let score = 0;
-            let onlyNoneChecked = noneCheckbox.checked && Array.from(checkboxes).filter(cb => cb.checked).length === 1;
+            // Q1 must be fully answered to calculate a score
+            if (!areAllQ1Answered()) {
+                q1_score = 0;
+                return 0;
+            } 
 
-            if (noneCheckbox.checked) {
-                // If None is checked, score is 0 and all others are disabled
-                score = 0;
+            audienceRadioGroups.forEach(groupName => {
+                const radios = document.getElementsByName(groupName);
+                for (const radio of radios) {
+                    if (radio.checked) {
+                        score += parseInt(radio.value) || 0;
+                        break;
+                    }
+                }
+            });
+            q1_score = score;
+            return score;
+        }
+
+        // --- Validation and Button State ---
+
+        function validateFormCompletion() {
+            const q1Answered = areAllQ1Answered();
+            
+            // Q2 is considered "answered" if at least one checkbox (including None) is checked.
+            const q2Checkboxes = sourceCheckboxesContainer.querySelectorAll('input[name="sourceType"]');
+            const q2Answered = Array.from(q2Checkboxes).some(cb => cb.checked);
+            
+            // The button is only enabled if BOTH Q1 and Q2 are answered
+            if (q1Answered && q2Answered) {
+                evaluateButton.disabled = false;
+                evaluateButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                evaluateButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            } else {
+                evaluateButton.disabled = true;
+                evaluateButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+                evaluateButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            }
+        }
+
+        // Attach listeners to all inputs for validation
+        function attachValidationListeners() {
+            // Q1 Radio Buttons
+            audienceRadioGroups.forEach(groupName => {
+                const radios = document.getElementsByName(groupName);
+                radios.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        calculateQ1Score();
+                        validateFormCompletion();
+                    });
+                });
+            });
+            // Q2 Checkboxes
+            sourceCheckboxesContainer.addEventListener('change', () => {
+                calculateSourcesScore();
+                validateFormCompletion();
+            });
+        }
+        attachValidationListeners();
+
+        // --- Q2: Sources Logic ---
+
+        function calculateSourcesScore() {
+            const checkboxes = sourceCheckboxesContainer.querySelectorAll('input[name="sourceType"]');
+            let score = 0;
+            
+            // Handle 'None' exclusivity and reflection visibility
+            if (noneSourceCheckbox.checked) {
                 checkboxes.forEach(cb => {
                     if (cb.id !== 'noneSource') {
                         cb.checked = false;
                         cb.disabled = true;
                     }
                 });
-                // Show reflection only if 'None' is the single, explicit selection
-                if (onlyNoneChecked) {
-                    noneReflectionDiv.classList.remove('hidden');
-                } else {
-                    noneReflectionDiv.classList.add('hidden');
-                }
+                noneReflectionDiv.classList.remove('hidden');
+                score = 0; // Score is explicitly zero if 'None' is checked
             } else {
-                // If None is unchecked, check for score from others
                 checkboxes.forEach(cb => {
                     cb.disabled = false;
-                    if (cb.id !== 'noneSource' && cb.checked) {
+                    if (cb.checked) {
                         score += parseInt(cb.getAttribute('data-point'));
                     }
                 });
-                
-                // Hide reflection if sources are checked or if no boxes are checked yet
                 noneReflectionDiv.classList.add('hidden');
             }
 
-            // Edge case: If the user unchecks everything, treat it as not answered yet (disables button)
-            if (!interaction) {
-                r1_answered = false;
-                noneReflectionDiv.classList.add('hidden');
-            }
-
-            relevance1ValueSpan.textContent = score;
+            sourcesValueSpan.textContent = score;
+            q2_score = score;
             
-            // Update button state based on r1_answered
-            if (r1_answered) {
-                // ENABLED STATE
-                evaluateButton.disabled = false;
-                evaluateButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                evaluateButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                evaluateButton.textContent = "Evaluate Sources";
-            } else {
-                // DISABLED STATE
-                evaluateButton.disabled = true;
-                evaluateButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-                evaluateButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'bg-green-600', 'hover:bg-green-700');
-                evaluateButton.textContent = "Evaluate Sources"; 
-            }
+            // VISUALLY HIDE THE SCORE BOX during selection process
+            sourcesScoreBox.classList.add('score-box-hidden');
 
             return score;
         }
 
-        relevance1Checkboxes.addEventListener('change', calculateRelevance1Score);
+        // --- Submission Handler ---
 
-
-        // Initial state setup:
-        evaluateButton.disabled = true;
-        evaluateButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-        evaluateButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-
-        calculateRelevance1Score();
-        
         document.getElementById('rubricForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // Recalculate current score
-            const relevance1Score = calculateRelevance1Score();
+            // Ensure score box is visible for final result
+            sourcesScoreBox.classList.remove('score-box-hidden');
             
-            // Since only Q1 remains, we immediately call the final result handler
-            handleFinalResult(relevance1Score);
+            // Calculate final scores from the visible form state
+            const finalScore = calculateQ1Score() + calculateSourcesScore();
+            
+            const isMismatch = (calculateQ1Score() === 0);
+            
+            handleFinalResult(finalScore, isMismatch);
 
-            // SCROLL TO RESULTS
+            // Scroll to results
             resultsDiv.classList.remove('hidden'); 
             resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
 
-        // Function to handle Final Score Calculation and Result Display
-        function handleFinalResult(relevance1Score) {
-            
-            const totalScore = relevance1Score;
+        // --- Final Result Logic ---
+
+        function handleFinalResult(score, isMismatch) {
             
             let priorityText = "";
             let priorityImage = "";
             let justificationContent = "";
 
-            // PRIORITY LOGIC (Max Score: 9)
-            // Low: 0-2, High: 3-5, Very High: 6-9
+            // MAX SCORE: 22 (12 Audience + 10 Sources)
             
-            if (totalScore >= 6) {
+            if (isMismatch) {
+                 // AUDIENCE MISMATCH (Only happens when Q1=0)
+                priorityText = "AUDIENCE MISMATCH";
+                priorityImage = "🛑";
+                justificationContent = `
+                    <p class="mb-4">This article scored 0 points on Audience Relevance. Translation is <strong>NOT RECOMMENDED</strong> at this time.</p>
+                    <div class="bg-red-100 border-l-4 border-red-600 text-red-800 p-4" role="alert">
+                        <p class="text-xl font-bold">❌ Why the Mismatch?</p>
+                        <p class="text-sm mt-2">The topic is deemed too niche or specialized to justify the resources required for a Spanish translation. We must prioritize articles that directly align with the known, critical information needs of the Spanish-speaking community to ensure maximum readership and impact.</p>
+                        <p class="font-bold mt-4">💡 Reframing for Audience Interest</p>
+                        <ul class="list-disc list-inside space-y-2 mt-2 text-sm">
+                            <li><strong>Find the Local Connection:</strong> Can the story be reframed around a local Latino business, school, or community member affected by the niche topic?</li>
+                            <li><strong>Highlight Utility:</strong> Does the story contain any information (health, finance, legal) that could be expanded into a standalone resource guide for the community?</li>
+                            <li><strong>Adjust the Angle:</strong> If the original angle is academic, can the story focus on the human impact or a cultural aspect to increase relevance?</li>
+                        </ul>
+                        <p class="mt-3">Reserve translation resources for content rated 'Moderate' or 'Critical' for audience interest. Consider revisiting the story with one of the strategies above.</p>
+                    </div>
+                `;
+                justificationContainer.classList.add('text-left', 'max-w-lg');
+
+            } else if (score >= 14) {
+                // VERY HIGH PRIORITY (14-22)
                 priorityText = "VERY HIGH PRIORITY";
                 priorityImage = "⭐⭐";
                 justificationContent = `
-                    <p class="mb-4">This article qualifies for <strong>VERY HIGH PRIORITY</strong> with a Sources Score of ${totalScore} out of 9. This score signifies <strong>exceptional community engagement and sourcing</strong>.</p>
+                    <p class="mb-4">This article qualifies for <strong>VERY HIGH PRIORITY</strong> with a Total Score of ${score} out of 22. This signifies <strong>exceptional sourcing and critical audience interest</strong>.</p>
                     <div class="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
-                        <p class="font-bold">🎉 Exceptional Sourcing: Celebrating Community-Driven Reporting</p>
+                        <p class="text-xl font-bold">🎉 Exceptional Sourcing: Celebrating Community-Driven Reporting</p>
                         <p class="text-sm mt-2">Thank you for your commitment to equitable sourcing! This score is a direct result of successfully centering Latino and Spanish-speaking voices in your story, ensuring maximum relevance and trust. Your work is a model for <strong>community-first journalism</strong>.</p>
                         <p class="font-bold mt-4">🚀 Strategic Next Steps: Maximize Impact</p>
                         <ul class="list-disc list-inside space-y-2 mt-2">
@@ -266,13 +512,14 @@
                 `;
                 justificationContainer.classList.add('text-left', 'max-w-lg');
                 
-            } else if (totalScore >= 3) {
+            } else if (score >= 9) {
+                // HIGH PRIORITY (9-13)
                 priorityText = "HIGH PRIORITY";
                 priorityImage = "🔥";
                 justificationContent = `
-                    <p class="mb-4">This article qualifies for <strong>HIGH PRIORITY</strong> because the Sources Score is ${totalScore} out of 9, meeting the critical threshold of 3 points. This indicates strong community sourcing and high relevance to our Latino/Spanish-speaking audience.</p>
+                    <p class="mb-4">This article qualifies for <strong>HIGH PRIORITY</strong> with a Total Score of ${score} out of 22. This indicates strong community interest and solid sourcing.</p>
                     <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
-                        <p class="font-bold">👍 Strong Sourcing: Building Trust and Relevance</p>
+                        <p class="text-xl font-bold">👍 Strong Sourcing: Building Trust and Relevance</p>
                         <p class="text-sm mt-2">Great work! Achieving a High Priority score shows you successfully incorporated key Latino and Spanish-speaking voices. This strong sourcing is fundamental to building trust with our audience.</p>
                         <p class="font-bold mt-4">✅ Next Step: Contact Your Editor</p>
                         <p>Immediate translation is recommended. Please contact your editor to discuss the next steps in the translation workflow and to schedule the article for publication.</p>
@@ -281,12 +528,13 @@
                 justificationContainer.classList.add('text-left', 'max-w-lg'); 
 
             } else {
+                // Low Priority (1-8)
                 priorityText = "Low Priority";
                 priorityImage = "📉";
                 justificationContent = `
-                    <p class="mb-4">This article scored ${totalScore} out of 9, landing in the <strong>LOW PRIORITY</strong> category. A score of 0-2 suggests the article currently lacks the necessary community voices to warrant immediate translation resources, but this is a chance to elevate your reporting.</p>
+                    <p class="mb-4">This article scored ${score} out of 22, landing in the <strong>LOW PRIORITY</strong> category. A low score suggests the article lacks the necessary community voices to warrant immediate translation resources, but this is a chance to elevate your reporting.</p>
                     <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
-                        <p class="font-bold">🎯 Why Community Sourcing Matters</p>
+                        <p class="text-xl font-bold">🎯 Why Community Sourcing Matters</p>
                         <p class="text-sm mt-2">Including Latino and Spanish-speaking sources is crucial because it ensures <strong>accuracy</strong>, builds <strong>trust</strong> with a core audience, and prevents the perpetuation of biased or incomplete narratives. Without these voices, the story may miss critical context or be irrelevant to the community it affects.</p>
                         <p class="font-bold mt-4">💡 Strategic Sourcing Tips</p>
                         <ul class="list-disc list-inside space-y-2 mt-2 text-sm">
@@ -300,12 +548,18 @@
                 justificationContainer.classList.add('text-left', 'max-w-lg'); 
             }
 
-            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('totalScore').textContent = score;
             document.getElementById('priority').textContent = priorityText;
             document.getElementById('resultImage').textContent = priorityImage;
             document.getElementById('justificationContainer').innerHTML = justificationContent;
             
         }
+        
+        // Initial validation run to set button state
+        document.addEventListener('DOMContentLoaded', () => {
+            validateFormCompletion();
+        });
+
     </script>
 </body>
 </html>
