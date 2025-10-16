@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Co-creation Protocol</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for subtle enhancements */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .score-criteria-group {
+            border-left: 4px solid #3b82f6; /* Blue border for score sections */
+        }
+        .form-card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="max-w-4xl mx-auto form-card bg-white rounded-xl p-6 md:p-10">
+        <h1 class="3xl font-bold text-gray-800 mb-2">Translation Co-creation Protocol</h1>
+        <p class="text-gray-500 mb-8">Story Assessment Form - Use this tool to prioritize stories for the Spanish-speaking audience.</p>
+
+        <form id="coCreationForm" onsubmit="sendEmailSummary(event)">
+            <!-- SECTION 1: STORY IDENTIFICATION & META DATA -->
+            <fieldset class="mb-8 border-t border-gray-200 pt-6">
+                <legend class="text-xl font-semibold text-gray-700 mb-4">SECTION 1: Story Identification & Meta Data</legend>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Story Title (English):</label>
+                        <input type="text" id="title" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="reporter" class="block text-sm font-medium text-gray-700 mb-1">Reporter(s):</label>
+                        <input type="text" id="reporter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date Assigned/Pitched:</label>
+                        <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="targetAudience" class="block text-sm font-medium text-gray-700 mb-1">Target Audience (English):</label>
+                        <input type="text" id="targetAudience" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., General Utah readers" required>
+                    </div>
+                </div>
+
+                <div class="mt-6 border-t pt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Story Type (Check all that apply):</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label class="flex items-center text-gray-600">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-1"> Hard News
+                        </label>
+                        <label class="flex items-center text-gray-600">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-1"> Feature
+                        </label>
+                        <label class="flex items-center text-gray-600">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-1"> Investigative
+                        </label>
+                        <label class="flex items-center text-gray-600">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-1"> Opinion/Column
+                        </label>
+                        <label class="flex items-center text-gray-600">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-1"> Review/Guide
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 border-t pt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Story Status:</label>
+                    <div class="flex flex-wrap gap-6">
+                        <label class="flex items-center text-gray-800 font-semibold bg-gray-50 p-2 rounded-lg border">
+                            <input type="radio" name="storyStatus" value="writing" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2" required> 
+                            Still in Planning/Writing Phase (PROACTIVE T-CC)
+                        </label>
+                        <label class="flex items-center text-gray-800 font-semibold bg-gray-50 p-2 rounded-lg border">
+                            <input type="radio" name="storyStatus" value="published" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2"> 
+                            Already Published (English) (REACTIVE T-CC)
+                        </label>
+                    </div>
+                </div>
+                 
+                <!-- New Field for LLM Input -->
+                <div class="mt-6 border-t pt-4">
+                    <label for="storyContent" class="block text-sm font-medium text-gray-700 mb-1">Paste English Story Draft/Summary (For Gemini Analysis):</label>
+                    <textarea id="storyContent" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" rows="6" placeholder="Paste the text here to enable the Gemini T-CC Suggestions button in Section 3."></textarea>
+                </div>
+            </fieldset>
+
+            <!-- SECTION 2: PART A – RELEVANCE SCORING -->
+            <fieldset class="mb-8 border-t border-gray-200 pt-6">
+                <legend class="text-xl font-semibold text-gray-700 mb-4">SECTION 2: Part A – Relevance Scoring (Points Tally)</legend>
+
+                <p class="text-sm text-gray-600 mb-4">Check any criteria that apply to the story's primary focus. The total score will calculate automatically.</p>
+
+                <!-- P-1: DIRECT POCKETBOOK IMPACT -->
+                <div class="mb-4 p-4 rounded-lg bg-blue-50 score-criteria-group">
+                    <h3 class="font-medium text-blue-700">P-1: DIRECT POCKETBOOK IMPACT (4 Points Each)</h3>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p1-input mt-1 mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" data-points="4">
+                        News about **Wages, Income, or Employment** (e.g., job creation/loss, minimum wage, labor disputes).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p1-input mt-1 mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" data-points="4">
+                        News about **Affordable Housing Policy** (e.g., rent control, zoning changes, eviction moratoriums).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p1-input mt-1 mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" data-points="4">
+                        News about **Healthcare Costs/Access** (e.g., Medicaid/CHIP changes, hospital billing, community clinic access).
+                    </label>
+                    <div class="mt-3 text-sm font-semibold text-blue-800">P-1 Sub-Total: <span id="p1-subtotal">0</span> points</div>
+                </div>
+
+                <!-- P-2: CIVIC & FAMILY EMPOWERMENT -->
+                <div class="mb-4 p-4 rounded-lg bg-green-50 score-criteria-group">
+                    <h3 class="font-medium text-green-700">P-2: CIVIC & FAMILY EMPOWERMENT (3 Points Each)</h3>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p2-input mt-1 mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500" data-points="3">
+                        **Voter/Civic Information** (e.g., election deadlines, how-to-vote guides, public hearings).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p2-input mt-1 mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500" data-points="3">
+                        **Critical State Service Access** (e.g., changes to DMV, licensing, SNAP/food assistance, or utility relief).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p2-input mt-1 mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500" data-points="3">
+                        **Immigration Policy/Legal Status** (Local impact of federal changes, DACA, legal aid resources).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p2-input mt-1 mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500" data-points="3">
+                        **Key Educational Policy** (Affecting school funding, resources, or language programs).
+                    </label>
+                    <div class="mt-3 text-sm font-semibold text-green-800">P-2 Sub-Total: <span id="p2-subtotal">0</span> points</div>
+                </div>
+
+                <!-- P-3: LDS CHURCH & CULTURE -->
+                <div class="mb-4 p-4 rounded-lg bg-yellow-50 score-criteria-group">
+                    <h3 class="font-medium text-yellow-700">P-3: LDS CHURCH & CULTURE (Conflict/Policy) (3 Points Each)</h3>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p3-input mt-1 mr-2 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500" data-points="3">
+                        Church **Policy or Statement on Immigration** or family unity.
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p3-input mt-1 mr-2 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500" data-points="3">
+                        Reports on Church actions that **directly impact Latin American members** (e.g., missions, finance, humanitarian aid).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p3-input mt-1 mr-2 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500" data-points="3">
+                        **Controversy or conflict** specifically involving LDS Latino cultural practices or community experience in Utah.
+                    </label>
+                    <div class="mt-3 text-sm font-semibold text-yellow-800">P-3 Sub-Total: <span id="p3-subtotal">0</span> points</div>
+                </div>
+
+                <!-- P-4: CRITICAL LOCAL ALERT/WATCHDOG -->
+                <div class="mb-4 p-4 rounded-lg bg-red-50 score-criteria-group">
+                    <h3 class="font-medium text-red-700">P-4: CRITICAL LOCAL ALERT/WATCHDOG (2 Points Each)</h3>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p4-input mt-1 mr-2 rounded border-gray-300 text-red-600 focus:ring-red-500" data-points="2">
+                        **Investigative/Watchdog findings** focused on an issue primarily impacting Latino-dense neighborhoods or businesses (e.g., fraud, exploitation).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p4-input mt-1 mr-2 rounded border-gray-300 text-red-600 focus:ring-red-500" data-points="2">
+                        **Public Health Warnings** specific to the local Latino community.
+                    </label>
+                    <div class="mt-3 text-sm font-semibold text-red-800">P-4 Sub-Total: <span id="p4-subtotal">0</span> points</div>
+                </div>
+
+                <!-- P-5: CULTURAL & LIFESTYLE RESONANCE -->
+                <div class="mb-4 p-4 rounded-lg bg-indigo-50 score-criteria-group">
+                    <h3 class="font-medium text-indigo-700">P-5: CULTURAL & LIFESTYLE RESONANCE (1 Point Each)</h3>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p5-input mt-1 mr-2 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" data-points="1">
+                        Profile of a **Local Latino Leader, Business, or Cultural Event** (celebration, arts, food).
+                    </label>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p5-input mt-1 mr-2 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" data-points="1">
+                        High-engagement topic with local relevance (e.g., Major *fútbol* news, community sports leagues).
+                    </label>
+                    <div class="mt-3 text-sm font-semibold text-indigo-800">P-5 Sub-Total: <span id="p5-subtotal">0</span> points</div>
+                </div>
+
+                <!-- P-6: SOURCE DIVERSITY BONUS -->
+                <div class="mb-4 p-4 rounded-lg bg-purple-50 score-criteria-group">
+                    <h3 class="font-medium text-purple-700">P-6: SOURCE DIVERSITY BONUS (1 Point)</h3>
+                    <label class="flex items-start text-sm text-gray-700 mt-2">
+                        <input type="checkbox" class="score-input p6-input mt-1 mr-2 rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-points="1">
+                        The English pitch/draft includes **two or more** distinct Latino/Spanish-speaking sources who provide a primary perspective.
+                    </label>
+                    <div class="mt-3 text-sm font-semibold text-purple-800">P-6 Sub-Total: <span id="p6-subtotal">0</span> points</div>
+                </div>
+
+                <!-- FINAL SCORE -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h2 class="2xl font-bold text-gray-800">TOTAL RELEVANCE SCORE: <span id="total-score" class="text-blue-600">0</span></h2>
+                </div>
+            </fieldset>
+
+            <!-- SECTION 3: DECISION & ACTION -->
+            <fieldset class="mb-8 border-t border-gray-200 pt-6">
+                <legend class="text-xl font-semibold text-gray-700 mb-4">SECTION 3: Decision & Action</legend>
+
+                <div id="decision-output" class="p-6 rounded-lg border-2 border-dashed transition duration-300">
+                    <p class="text-lg font-semibold mb-2" id="protocol-action-title">Awaiting Score...</p>
+                    <p id="protocol-action-text" class="text-gray-700">Please select a **Story Status** in Section 1 and check the scoring criteria above to determine the required translation protocol.</p>
+                </div>
+                
+                <!-- Gemini Button Integration -->
+                <div class="mt-6">
+                    <button type="button" id="gemini-analysis-btn" onclick="runGeminiAnalysis()" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition duration-150 shadow-md opacity-50 cursor-not-allowed" disabled>
+                        ✨ Generate T-CC Suggestions with Gemini
+                    </button>
+                    <p id="gemini-note" class="text-xs text-gray-500 mt-2 text-center">Paste the story content in Section 1 and achieve a score of 4+ to enable AI assistance for Section 4.</p>
+                </div>
+
+            </fieldset>
+
+            <!-- SECTION 4: PART B – TRANSLATION CO-CREATION (T-CC) PLAN -->
+            <fieldset id="tcc-plan-section" class="mb-8 border-t border-gray-200 pt-6 opacity-50 pointer-events-none transition duration-300" disabled>
+                <legend class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                    SECTION 4: Part B – Translation Co-creation (T-CC) Plan
+                    <span id="tcc-status" class="ml-3 px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">DISABLED (Score &lt; 4)</span>
+                </legend>
+                
+                <p class="text-sm text-gray-600 mb-4">MANDATORY for High Priority (Score 4+). Complete this section in consultation with the Content Lead. Use Gemini Suggestions as a starting point.</p>
+
+                <!-- 1. Contextual Bridging -->
+                <div class="mb-6 p-4 border rounded-lg">
+                    <h4 class="font-medium text-gray-800 mb-2">1. Contextual Bridging (Local Knowledge Gap)</h4>
+                    <p class="text-sm text-gray-600 mb-2">What local Utah institution, acronym, or law requires a footnote or parenthetical explanation for non-local readers? (e.g., UDOT, zoning laws).</p>
+                    <textarea class="tcc-field w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" rows="3" id="tcc-context-bridging" placeholder="Action Needed: Enter required footnote/parenthetical explanation here." required></textarea>
+                </div>
+
+                <!-- 2. Source-Centric Adaptation -->
+                <div class="mb-6 p-4 border rounded-lg">
+                    <h4 class="font-medium text-gray-800 mb-2">2. Source-Centric Adaptation (Authenticity)</h4>
+                    <label class="flex items-center text-sm text-gray-700 mb-2">
+                        <input type="checkbox" class="tcc-field mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" id="source-in-spanish">
+                        Source(s) were originally interviewed in Spanish.
+                    </label>
+                    <p class="text-sm text-gray-600 mb-2">If checked, include the original Spanish quote to prevent double-translation errors:</p>
+                    <textarea class="tcc-field w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" rows="3" id="tcc-original-quote" placeholder="Action Needed: Enter original Spanish quote(s) here."></textarea>
+                </div>
+
+                <!-- 3. Structural & Tone Adjustment -->
+                <div class="mb-6 p-4 border rounded-lg">
+                    <h4 class="font-medium text-gray-800 mb-2">3. Structural & Tone Adjustment (Actionability)</h4>
+                    <p class="text-sm text-gray-600 mb-2">Does this story require a **Call to Action** or a resource guide at the end? (P-1, P-2, P-4 stories)</p>
+                    <textarea class="tcc-field w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" rows="3" id="tcc-call-to-action" placeholder="Action Needed: Enter resources/CTA text to be added in the finale (e.g., voter registration link, legal aid phone number)." required></textarea>
+                </div>
+
+                <!-- 4. Specialized Terminology Review -->
+                <div class="mb-6 p-4 border rounded-lg">
+                    <h4 class="font-medium text-gray-800 mb-2">4. Specialized Terminology Review (LDS/Technical)</h4>
+                    <label class="flex items-center text-sm text-gray-700 mb-2">
+                        <input type="checkbox" class="tcc-field mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" id="lds-terms-check">
+                        Story uses specific LDS Church ecclesiastical terms (P-3).
+                    </label>
+                    <p class="text-sm text-gray-600 mb-2">If checked, list the critical terms for official Spanish verification:</p>
+                    <input type="text" class="tcc-field w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" id="tcc-lds-terms" placeholder="Action Needed: List terms (e.g., Stake President, Relief Society, General Authority Seventy)">
+                </div>
+            </fieldset>
+            
+            <!-- SECTION 5: SIGN-OFF -->
+            <fieldset class="mt-10 pt-6 border-t border-gray-200">
+                 <legend class="text-xl font-semibold text-gray-700 mb-4">SECTION 5: Sign-off & Completion</legend>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="editor-name" class="block text-sm font-medium text-gray-700 mb-1">Assigning Editor:</label>
+                        <input type="text" id="editor-name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Name/Signature">
+                    </div>
+                    <div>
+                        <label for="content-lead" class="block text-sm font-medium text-gray-700 mb-1">Content Lead (Translation Co-creator):</label>
+                        <input type="text" id="content-lead" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Name/Signature">
+                    </div>
+                 </div>
+
+                 <div class="mt-6">
+                    <label for="final-treatment" class="block text-sm font-medium text-gray-700 mb-1">Final Translation Treatment:</label>
+                    <select id="final-treatment" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- Select Final Treatment --</option>
+                        <option value="tcc">Translation Co-creation (T-CC) Applied</option>
+                        <option value="straight">Straight Translation</option>
+                        <option value="summary">Summary Only</option>
+                        <option value="none">No Translation</option>
+                    </select>
+                 </div>
+            </fieldset>
+
+            <!-- Submit Button (Triggers Email Draft) -->
+            <div class="mt-8">
+                <button type="submit" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition duration-150 shadow-md">
+                    Send Assessment Summary to Content Team
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Placeholder email addresses for the newsroom workflow
+        const CONTENT_LEAD_EMAIL = "cristobal.villegas@sltrib.org";
+        const EDITORIAL_INBOX_EMAIL = "editor.inbox@sltrib.org";
+        
+        const groups = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+        const scoreInputs = document.querySelectorAll('.score-input');
+        const statusInputs = document.querySelectorAll('input[name="storyStatus"]');
+        const storyContentInput = document.getElementById('storyContent');
+        const geminiBtn = document.getElementById('gemini-analysis-btn');
+
+        // --- Core Functions for UI/Scoring ---
+        
+        function updateSubtotals() {
+            groups.forEach(group => {
+                let subTotal = 0;
+                document.querySelectorAll(`.${group}-input`).forEach(input => { 
+                    if (input.checked) {
+                        subTotal += parseInt(input.getAttribute('data-points'), 10);
+                    }
+                });
+                const subtotalElement = document.getElementById(`${group}-subtotal`);
+                if (subtotalElement) {
+                    subtotalElement.textContent = subTotal;
+                }
+            });
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            scoreInputs.forEach(input => {
+                const points = parseInt(input.getAttribute('data-points'), 10);
+                if (input.checked) {
+                    totalScore += points;
+                }
+            });
+
+            document.getElementById('total-score').textContent = totalScore;
+            
+            updateDecision(totalScore);
+            updateSubtotals();
+        }
+
+        function updateDecision(score) {
+            const decisionOutput = document.getElementById('decision-output');
+            const protocolActionTitle = document.getElementById('protocol-action-title');
+            const protocolActionText = document.getElementById('protocol-action-text');
+            const tccSection = document.getElementById('tcc-plan-section');
+            const tccStatus = document.getElementById('tcc-status');
+            const tccFields = document.querySelectorAll('.tcc-field');
+            const statusInput = document.querySelector('input[name="storyStatus"]:checked');
+            const status = statusInput ? statusInput.value : null;
+
+            // Reset decision styles
+            decisionOutput.classList.remove('border-green-500', 'border-red-500', 'border-yellow-500');
+
+            // --- Gemini Button Enablement Logic ---
+            const contentExists = storyContentInput.value.trim().length > 50;
+            if (score >= 4 && contentExists) {
+                geminiBtn.removeAttribute('disabled');
+                geminiBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                geminiBtn.classList.replace('bg-purple-600', 'bg-blue-500');
+            } else {
+                geminiBtn.setAttribute('disabled', 'disabled');
+                geminiBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                geminiBtn.classList.replace('bg-blue-500', 'bg-purple-600');
+            }
+
+
+            // --- High Priority Logic ---
+            if (score >= 4) {
+                decisionOutput.classList.add('border-green-500');
+                enableTCCSection(tccSection, tccStatus, tccFields);
+
+                if (status === 'writing') {
+                    protocolActionTitle.textContent = 'HIGH PRIORITY: Translation Co-creation (T-CC) MANDATORY - PROACTIVE';
+                    protocolActionText.textContent = 'MANDATORY: Proceed immediately to SECTION 4. The Reporter **MUST** schedule a Pre-Writing Consultation with the Content Lead to integrate Spanish-speaking context and sources *before* the English version is finalized.';
+                } else if (status === 'published') {
+                    protocolActionTitle.textContent = 'HIGH PRIORITY: Translation Co-creation (T-CC) MANDATORY - REACTIVE';
+                    protocolActionText.textContent = 'URGENT: Proceed immediately to SECTION 4. The Content Lead must perform a **Reactive T-CC**, which may require follow-up calls, data gathering, or sourcing of missing context to ensure the translation is culturally resonant and actionable.';
+                } else {
+                    protocolActionTitle.textContent = 'HIGH PRIORITY: T-CC REQUIRED (Select Status in Section 1)';
+                    protocolActionText.textContent = 'Please select the Story Status in Section 1 to get specific guidance for Proactive or Reactive T-CC.';
+                }
+            } 
+            // --- Medium Priority Logic ---
+            else if (score >= 2) {
+                protocolActionTitle.textContent = 'MEDIUM PRIORITY: Straight Translation Recommended';
+                protocolActionText.textContent = 'OPTIONAL: Proceed to SECTION 4 for essential context/resources. Content Lead will review availability. If resources are limited, a Straight Translation is the default treatment.';
+                decisionOutput.classList.add('border-yellow-500');
+                disableTCCSection(tccSection, tccStatus, tccFields); 
+            } 
+            // --- Low Priority Logic ---
+            else {
+                protocolActionTitle.textContent = 'LOW PRIORITY: Defer/No Translation';
+                protocolActionText.textContent = 'DEFER: Story is a low priority. Use "No Translation" or "Social Media Summary" only. Defer until all high-priority stories are complete.';
+                decisionOutput.classList.add('border-red-500');
+                disableTCCSection(tccSection, tccStatus, tccFields);
+            }
+        }
+
+        function enableTCCSection(tccSection, tccStatus, tccFields) {
+            tccSection.removeAttribute('disabled');
+            tccSection.classList.remove('opacity-50', 'pointer-events-none');
+            tccStatus.classList.remove('bg-red-100', 'text-red-800');
+            tccStatus.classList.add('bg-green-100', 'text-green-800');
+            tccStatus.textContent = 'ENABLED (Score ≥ 4)';
+            tccFields.forEach(field => field.setAttribute('required', ''));
+            document.getElementById('tcc-original-quote').removeAttribute('required'); 
+            document.getElementById('tcc-lds-terms').removeAttribute('required'); 
+        }
+
+        function disableTCCSection(tccSection, tccStatus, tccFields) {
+            tccSection.setAttribute('disabled', '');
+            tccSection.classList.add('opacity-50', 'pointer-events-none');
+            tccStatus.classList.remove('bg-green-100', 'text-green-800');
+            tccStatus.classList.add('bg-red-100', 'text-red-800');
+            tccStatus.textContent = 'DISABLED (Score < 4)';
+            tccFields.forEach(field => field.removeAttribute('required'));
+        }
+        
+        // --- GEMINI ANALYSIS FUNCTION (Placeholder) ---
+        function runGeminiAnalysis() {
+            const content = storyContentInput.value.trim();
+            if (content.length < 50) {
+                alert("Please paste the story draft or summary into the text box in Section 1 to run the analysis.");
+                return;
+            }
+
+            // Simulate the call to a Gemini-powered endpoint
+            geminiBtn.textContent = 'Analyzing... (Simulated)';
+            geminiBtn.classList.add('animate-pulse');
+
+            // --- SIMULATED LLM OUTPUT (Ideally structured JSON) ---
+            setTimeout(() => {
+                // Determine the topic based on P-1 and P-2 checks
+                const isHousing = document.querySelector('.p1-input:nth-child(2)').checked;
+                const isCivic = document.querySelector('.p2-input:nth-child(1)').checked;
+                
+                let bridgingSuggestion = "Terminos clave: [List of 3-5 jargon terms found in the text]. Estos serán aclarados en notas al pie de página.";
+                let ctaSuggestion = "Foco en acción: Añadir un párrafo final que enlace con recursos comunitarios.";
+                let ldsTerms = "";
+
+                if (isHousing) {
+                    bridgingSuggestion = "Contextual Bridging Suggestion: Clarify 'zoning' as 'zonificación municipal' and explain the function of the 'Utah Housing Authority' (Autoridad de Vivienda de Utah).";
+                    ctaSuggestion = "Call to Action Suggestion: Provide phone number/link for tenants' rights resources (e.g., Utah Legal Services) and rent assistance applications.";
+                } else if (isCivic) {
+                    bridgingSuggestion = "Contextual Bridging Suggestion: Explain 'Ballot Initiative' as 'Iniciativa Popular' and the function of the 'Lieutenant Governor' in Utah elections.";
+                    ctaSuggestion = "Call to Action Suggestion: Provide the voter registration link and the date for the next public comment period for the policy.";
+                }
+
+                if (document.querySelector('.p3-input').checked) {
+                    ldsTerms = "Suggested LDS Terms to Verify: Stake President, Relief Society, General Authority Seventy. (Ensure official Church Spanish terms are used)";
+                }
+
+                // Populate Section 4 with LLM suggestions
+                document.getElementById('tcc-context-bridging').value = bridgingSuggestion;
+                document.getElementById('tcc-call-to-action').value = ctaSuggestion;
+                document.getElementById('tcc-lds-terms').value = ldsTerms;
+
+                // Finalize simulation appearance
+                geminiBtn.textContent = 'Suggestions Applied ✅';
+                geminiBtn.classList.remove('animate-pulse');
+                geminiBtn.classList.replace('bg-blue-500', 'bg-green-600');
+                
+                alert("Gemini suggestions have been drafted into Section 4. Please review and edit before sending the assessment.");
+
+            }, 1000); // Simulate network delay
+        }
+
+        // --- Email Submission Function ---
+
+        function sendEmailSummary(event) {
+            event.preventDefault(); // Stop default form submission/page reload
+            
+            // Basic form validation for required fields before email generation
+            if (!document.getElementById('coCreationForm').checkValidity()) {
+                alert("Please fill out all required fields in Section 1 and Section 4 (if enabled) before sending.");
+                return;
+            }
+
+            // 1. Collect Core Data
+            const title = document.getElementById('title').value || 'N/A';
+            const reporter = document.getElementById('reporter').value || 'N/A';
+            const totalScore = document.getElementById('total-score').textContent;
+            const statusInput = document.querySelector('input[name="storyStatus"]:checked');
+            const status = statusInput ? statusInput.value.toUpperCase() : 'N/A';
+            const decisionTitle = document.getElementById('protocol-action-title').textContent;
+            
+            // 2. Collect T-CC Plan Details (only if high priority)
+            let tccDetails = "";
+            if (parseInt(totalScore) >= 4) {
+                tccDetails = `
+--- SECTION 4: T-CC PLAN (MANDATORY) ---
+1. Contextual Bridging: ${document.getElementById('tcc-context-bridging').value || 'N/A'}
+2. Source Quote Check (in Spanish?): ${document.getElementById('source-in-spanish').checked ? 'YES' : 'NO'}
+3. Original Spanish Quote: ${document.getElementById('tcc-original-quote').value || 'N/A'}
+4. Call to Action/Resources: ${document.getElementById('tcc-call-to-action').value || 'N/A'}
+5. LDS Terms Check: ${document.getElementById('lds-terms-check').checked ? 'YES' : 'NO'}
+6. LDS Terms to Verify: ${document.getElementById('tcc-lds-terms').value || 'N/A'}
+---
+`;
+            }
+
+            // 3. Assemble the Email Body
+            const emailBody = `
+=== Translation Co-creation Assessment Summary ===
+
+STORY TITLE: ${title}
+REPORTER: ${reporter}
+ASSIGNED DATE: ${document.getElementById('date').value || 'N/A'}
+
+CURRENT STATUS: ${status}
+TOTAL RELEVANCE SCORE: ${totalScore}
+
+--- SECTION 3: DECISION & ACTION ---
+PROTOCOL: ${decisionTitle}
+
+GUIDANCE:
+${document.getElementById('protocol-action-text').textContent}
+
+${tccDetails}
+
+--- END OF ASSESSMENT ---
+`;
+            
+            // 4. Create mailto Link
+            const subject = `[T-CC Priority ${totalScore}] ${title} - ${status}`;
+            const mailtoLink = `mailto:${CONTENT_LEAD_EMAIL}?cc=${EDITORIAL_INBOX_EMAIL}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            
+            // Open the email client
+            window.open(mailtoLink);
+        }
+
+        // --- Event Listeners and Initial Load ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event listeners to trigger scoring and decision update
+            scoreInputs.forEach(input => {
+                input.addEventListener('change', calculateScore);
+            });
+            
+            // Add listener for story status changes
+            statusInputs.forEach(input => {
+                input.addEventListener('change', calculateScore);
+            });
+            
+            // Add listener for content changes (to enable Gemini button)
+            storyContentInput.addEventListener('input', calculateScore);
+
+
+            // Re-calculate the score and update the decision on load
+            calculateScore();
+        });
+    </script>
+</body>
+</html>
